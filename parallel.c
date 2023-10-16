@@ -10,7 +10,7 @@ int n1, n2;
 char *s1, *s2;
 FILE *fp;
 int totalNum = 0; 
-int countArray[NUM_THREADS] = {0}; // Declare the countArray and initialize to 0
+int countArray[NUM_THREADS] = {0};
 
 int num_substring(int t, char *start, int len) {
     int count = 0;
@@ -36,6 +36,9 @@ void *calSubStringThread(void *threadid) {
     char *start = s1 + tid * len_per_thread;
     int count = num_substring(tid, start, len_per_thread);
     
+    // Display a message for each substring thread
+    printf("The number of substring thread %ld find is: %d\n", tid, count);
+
     countArray[tid] = count;
 
     pthread_exit(NULL);
@@ -88,5 +91,5 @@ int main(int argc, char *argv[]) {
     }
 
     printf("The number of substrings is: %d\n", totalNum);
-    return 1;
+    return 0;
 }
