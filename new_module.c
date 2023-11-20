@@ -1,4 +1,12 @@
 #include <linux/module.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("dwalto35");
+MODULE_DESCRIPTION("Creating a helloworld kernel module");
+
+#include <linux/module.h>
 #include <linux/kernel.h>
 
 int init_new_module(void)
