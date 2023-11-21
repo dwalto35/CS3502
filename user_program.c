@@ -24,28 +24,26 @@ int main(int argc, char *argv[])
         printf("open successfully\n");
     }
 
-    /* map p_map to the proc file and grant read & write privilege */
-    p_map = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    // Map p_map to the proc file and grant read & write privilege
+    p_map = (unsigned char *)mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     if (p_map == MAP_FAILED)
     {
         perror("mmap");
-        close(fd);
         exit(1);
     }
 
-    /* read data from p_map */
+    // Read data from p_map
     printf("Data read from kernel space: ");
-    for (int i = 0; i < 12; ++i)
+    for (int i = 0; i < 12; i++)
     {
-        printf("%d ", p_map[i]);
+        printf("%u ", p_map[i]);
     }
     printf("\n");
 
-    /* unmap p_map from the proc file */
-    if (munmap(p_map, PAGE_SIZE) == -1)
+    // Unmap p_map from the proc file
+    if (munmap(p_map, PAGE_SIZE) < 0)
     {
         perror("munmap");
-        close(fd);
         exit(1);
     }
 
