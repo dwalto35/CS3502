@@ -27,15 +27,18 @@ static int my_map(struct file *filp, struct vm_area_struct *vma)
     unsigned long pfn;
     unsigned long size = vma->vm_end - vma->vm_start;
 
-    /* map vma of user space to the continuous physical space/address (buffer) */
-    if (remap_pfn_range(vma, vma->vm_start, virt_to_phys(buffer) >> PAGE_SHIFT, size, vma->vm_page_prot))
+    // Get the physical page frame number of the buffer
+    pfn = page_to_pfn(virt_to_page(buffer));
+
+    // Map the physical memory into user space
+    if (remap_pfn_range(vma, vma->vm_start, pfn, size, vma->vm_page_prot))
     {
-        printk("Error mapping buffer to user space\n");
-        return -EAGAIN;
+        printk("Error mapping memory\n");
+        return -EIO;
     }
 
-    /* write the array[12] into the buffer */
-    memcpy(buffer, array, sizeof(array));
+    // Write the data into the user space
+    memcpy((void *)vma->vm_start, array, sizeof(array));
 
     return 0;
 }
